@@ -262,6 +262,7 @@ def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,im
                                                     ])
 
     opt = Adam(lr=0.0002, beta_1=0.5)
+    
     model.compile(loss=['hinge', 
                     'hinge',
                     'hinge',

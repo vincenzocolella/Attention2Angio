@@ -1,12 +1,14 @@
 from src.model import coarse_generator,fine_generator,aagan,discriminator
-from src.performance_visualize import visualize_save_weight, visualize_save_weight_global, plot_history
+from src.performance_visualize import visualize_save_weight, visualize_save_weight_global, plot_history, summarize_performance_global, summarize_performance, to_csv
 from src.dataloader import resize, generate_fake_data_coarse, generate_fake_data_fine, generate_real_data, load_real_data
 import argparse
 import time
+import numpy as np
 from numpy import load
 import gc
 import keras.backend as K
 import os
+import pandas as pd
 
 def train(d_model1, d_model2, d_model3, d_model4, g_global_model, g_local_model, 
           gan_model, dataset, n_epochs=20, n_batch=1, n_patch=[64,32],savedir='AAGAN'):
@@ -162,11 +164,13 @@ def train(d_model1, d_model2, d_model3, d_model4, g_global_model, g_local_model,
         g_global_percp_hist.append(g_global_percp_loss)
         g_global_percp_hist.append(g_local_percp_loss)
         gan_hist.append(gan_loss)
-        # summarize model performance
+        #### CUSTOMIZATIONS ####
+        
+         #summarize model performance
         if (i+1) % (bat_per_epo * 1) == 0:
-            summarize_performance_global(i, g_global_model, dataset, n_samples=3,savedir=savedir)
+            summarize_performance_global(i, g_global_model,d_model1, dataset, n_samples=4,savedir=savedir)
             
-            summarize_performance(i, g_global_model,g_local_model, dataset, n_samples=3,savedir=savedir)
+            summarize_performance(i, g_global_model,g_local_model,d_model2, dataset, n_samples=4,savedir=savedir)
     plot_history(d1_hist, d2_hist, d3_hist, d4_hist, d5_hist, d6_hist, d7_hist, d8_hist, fm1_hist, fm2_hist, fm3_hist, fm4_hist, g_global_hist,g_local_hist, 
                  g_global_percp_hist, g_local_percp_hist, g_global_recon_hist, g_local_recon_hist, gan_hist,savedir=savedir)
     to_csv(d1_hist, d2_hist, d3_hist, d4_hist, d5_hist, d6_hist, d7_hist, d8_hist, fm1_hist, fm2_hist, fm3_hist, fm4_hist, g_global_hist,g_local_hist, 
@@ -223,7 +227,8 @@ if __name__ == "__main__":
                   image_shape_fine,image_shape_coarse, image_shape_xglobal,label_shape_fine,label_shape_coarse)
     # train model
     train(d_model1, d_model2, d_model3, d_model4,g_coarse_model, g_fine_model, gan_model, dataset, n_epochs=args.epochs, n_batch=args.batch_size, n_patch=[64,32,16],savedir=args.savedir)
-  
+    g_coarse_model.save('g_coarse_model.h5') 
+    g_fine_model.save('g_fine_model.h5') 
     end_time = time.time()
     time_taken = (end_time-start_time)/3600.0
     print(time_taken)
