@@ -3,6 +3,9 @@ from src.dataloader import load_real_data, generate_real_data, generate_fake_dat
 import os
 import numpy as np
 import pandas as pd
+from skimage import data, img_as_float
+from skimage.metrics import structural_similarity as ssim
+from skimage.metrics import mean_squared_error
 
 def visualize_save_weight(step,g_global_model,g_local_model, dataset, n_samples=3,savedir='AAGAN'):
     # select a sample of input images
@@ -212,8 +215,8 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + n_samples + i)
         pyplot.axis('off')
-        twoD_img = X_fakeB_half[:,:,:,0]
-        pyplot.imshow(twoD_img[i],cmap="gray")
+        generated = X_fakeB_half[:,:,:,0]
+        pyplot.imshow(generated[i],cmap="gray")
     # plot real target image
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + n_samples*2 + i)
@@ -231,8 +234,7 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     d_model.save(filename3)
     print('>Saved: %s and %s' % (filename1, filename2))
     #return x_global
-    
-    
+
     # SSIM
 
     ssim_1 = ssim(generated[1], twoD_img[1], data_range=generated[1].max() - generated[1].min())
@@ -249,7 +251,10 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
 
     ssim_4 = ssim(generated[4], twoD_img[4], data_range=generated[4].max() - generated[4].min())
     print("SSIM between fourth target and result:")
-    print(ssim_4)
+    print(ssim_3)
+
+    
+
 
 
     

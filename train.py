@@ -166,7 +166,7 @@ def train(d_model1, d_model2, d_model3, d_model4, g_global_model, g_local_model,
         gan_hist.append(gan_loss)
         #### CUSTOMIZATIONS ####
         
-        #summarize model performance
+         #summarize model performance
         if (i+1) % (bat_per_epo * 1) == 0:
             summarize_performance_global(i, g_global_model,d_model1, dataset, n_samples=4,savedir=savedir)
             
@@ -231,4 +231,5 @@ if __name__ == "__main__":
     g_fine_model.save('g_fine_model.h5') 
     end_time = time.time()
     time_taken = (end_time-start_time)/3600.0
+    print("Time Taken")
     print(time_taken)
