@@ -227,6 +227,10 @@ if __name__ == "__main__":
     gan_model = aagan(g_fine_model,g_coarse_model, d_model1, d_model2, d_model3, d_model4,
                   image_shape_fine,image_shape_coarse, image_shape_xglobal,label_shape_fine,label_shape_coarse,args.mod)
     # train model
+    if args.mod==1:
+        print("Training without Perceptual Loss => MOD ACTIVATED")
+    else:
+        print("Training with Perceptual Loss => classic mode")
     train(d_model1, d_model2, d_model3, d_model4,g_coarse_model, g_fine_model, gan_model, dataset, n_epochs=args.epochs, n_batch=args.batch_size, n_patch=[64,32,16],savedir=args.savedir)
     g_coarse_model.save('g_coarse_model.h5') 
     g_fine_model.save('g_fine_model.h5') 
