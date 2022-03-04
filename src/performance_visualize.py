@@ -206,36 +206,11 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     X_realA_half = (X_realA_half + 1) / 2.0
     X_realB_half = (X_realB_half + 1) / 2.0
     X_fakeB_half = (X_fakeB_half + 1) / 2.0
-    # plot real source images
-    for i in range(n_samples):
-        pyplot.subplot(3, n_samples, 1 + i)
-        pyplot.axis('off')
-        pyplot.imshow(X_realA_half[i])
-    # plot generated target image
-    for i in range(n_samples):
-        pyplot.subplot(3, n_samples, 1 + n_samples + i)
-        pyplot.axis('off')
-        generated = X_fakeB_half[:,:,:,0]
-        pyplot.imshow(generated[i],cmap="gray")
-    # plot real target image
-    for i in range(n_samples):
-        pyplot.subplot(3, n_samples, 1 + n_samples*2 + i)
-        pyplot.axis('off')
-        twoD_img = X_realB_half[:,:,:,0]
-        pyplot.imshow(twoD_img[i],cmap="gray")
-    # save plot to file
-    filename1 = savedir+'/global_plot_%06d.png' % (step+1)
-    pyplot.savefig(filename1)
-    pyplot.close()
-    # save the generator model
-    filename2 = savedir+'/global_gmodel_%06d.h5' % (step+1)
-    filename3 = savedir+'/global_dmodel_%06d.h5' % (step+1)
-    g_model.save(filename2)
-    d_model.save(filename3)
-    print('>Saved: %s and %s' % (filename1, filename2))
-    #return x_global
 
     # SSIM
+
+    generated = X_fakeB_half[:,:,:,0]
+    twoD_img = X_realB_half[:,:,:,0]
 
     ssim_1 = ssim(generated[0], twoD_img[0], data_range=generated[0].max() - generated[0].min())
     print("SSIM between first target and result:")
@@ -252,6 +227,47 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     ssim_4 = ssim(generated[3], twoD_img[3], data_range=generated[3].max() - generated[3].min())
     print("SSIM between fourth target and result:")
     print(ssim_4)
+
+    # plot real source images
+    for i in range(n_samples):
+        pyplot.subplot(3, n_samples, 1 + i)
+        pyplot.axis('off')
+        pyplot.imshow(X_realA_half[i])
+    # plot generated target image
+    for i in range(n_samples):
+        pyplot.subplot(3, n_samples, 1 + n_samples + i)
+        pyplot.axis('off')
+        
+        #generated = X_fakeB_half[:,:,:,0]
+        pyplot.imshow(generated[i],cmap="gray")
+    # plot real target image
+    for i in range(n_samples):
+        pyplot.subplot(3, n_samples, 1 + n_samples*2 + i)
+        pyplot.axis('off')
+        #twoD_img = X_realB_half[:,:,:,0]
+        pyplot.imshow(twoD_img[i],cmap="gray")
+    
+    # non compaiono sull'immagine
+    pyplot.text(80, 450, round(ssim_1,6))
+    pyplot.text(210, 450, round(ssim_2,6))
+    pyplot.text(340, 450, round(ssim_3,6))
+    pyplot.text(470, 450, round(ssim_4,6))
+
+
+    
+
+
+    # save plot to file
+    filename1 = savedir+'/global_plot_%06d.png' % (step+1)
+    pyplot.savefig(filename1)
+    pyplot.close()
+    # save the generator model
+    filename2 = savedir+'/global_gmodel_%06d.h5' % (step+1)
+    filename3 = savedir+'/global_dmodel_%06d.h5' % (step+1)
+    g_model.save(filename2)
+    d_model.save(filename3)
+    print('>Saved: %s and %s' % (filename1, filename2))
+    #return x_global
 
     
 

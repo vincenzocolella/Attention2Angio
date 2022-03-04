@@ -213,7 +213,7 @@ def discriminator(input_shape_fundus=(512, 512, 3),
     model.compile(loss=loss, optimizer=Adam(lr=0.0002, beta_1=0.5, beta_2=0.999))
     return model
 
-def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,image_shape_fine,image_shape_coarse,image_shape_x_coarse,label_shape_fine,label_shape_coarse):
+def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,image_shape_fine,image_shape_coarse,image_shape_x_coarse,label_shape_fine,label_shape_coarse,mod):
     # Discriminator NOT trainable
     d_model1.trainable = False
     d_model2.trainable = False
@@ -262,8 +262,8 @@ def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,im
                                                     ])
 
     opt = Adam(lr=0.0002, beta_1=0.5)
-    
-    model.compile(loss=['hinge', 
+    if mod == 1:
+      model.compile(loss=['hinge', 
                     'hinge',
                     'hinge',
                     'hinge',
@@ -275,7 +275,7 @@ def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,im
                     'hinge',
                     'mse',
                     'mse',
-                    perceptual_loss_coarse,
+                    perceptual_loss_coarse, # mod
                     perceptual_loss_fine
                     ], 
               optimizer=opt,loss_weights=[1,1,1,1,
@@ -285,5 +285,29 @@ def aagan(g_model_fine,g_model_coarse, d_model1, d_model2, d_model3, d_model4,im
                                           1,
                                           10,10,10,10,10,10
                                           ])
+    else:
+      model.compile(loss=['hinge', 
+                    'hinge',
+                    'hinge',
+                    'hinge',
+                    fm1,
+                    fm2,
+                    fm3,
+                    fm4,
+                    'hinge',
+                    'hinge',
+                    'mse',
+                    'mse',
+                    'mse', # mod
+                    'mse'
+                    ], 
+              optimizer=opt,loss_weights=[1,1,1,1,
+                                          1,
+                                          1,
+                                          1,
+                                          1,
+                                          10,10,10,10,10,10
+                                          ])
+
     model.summary()
     return model

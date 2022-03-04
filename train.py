@@ -184,6 +184,7 @@ if __name__ == "__main__":
     parser.add_argument('--npz_file', type=str, default='attenton2angio', help='path/to/npz/file')
     parser.add_argument('--input_dim', type=int, default=512)
     parser.add_argument('--savedir', type=str, required=False, help='path/to/save_directory',default='AAGAN')
+    parser.add_argument('--mod', type=int, default=0) # modification = 1 means that it'll train with our mod
     args = parser.parse_args()
 
     K.clear_session()
@@ -224,7 +225,7 @@ if __name__ == "__main__":
 
     # define fundus2angio 
     gan_model = aagan(g_fine_model,g_coarse_model, d_model1, d_model2, d_model3, d_model4,
-                  image_shape_fine,image_shape_coarse, image_shape_xglobal,label_shape_fine,label_shape_coarse)
+                  image_shape_fine,image_shape_coarse, image_shape_xglobal,label_shape_fine,label_shape_coarse,args.mod)
     # train model
     train(d_model1, d_model2, d_model3, d_model4,g_coarse_model, g_fine_model, gan_model, dataset, n_epochs=args.epochs, n_batch=args.batch_size, n_patch=[64,32,16],savedir=args.savedir)
     g_coarse_model.save('g_coarse_model.h5') 
