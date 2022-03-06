@@ -206,57 +206,29 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     X_realA_half = (X_realA_half + 1) / 2.0
     X_realB_half = (X_realB_half + 1) / 2.0
     X_fakeB_half = (X_fakeB_half + 1) / 2.0
-
-    # SSIM
-
-    generated = X_fakeB_half[:,:,:,0]
-    twoD_img = X_realB_half[:,:,:,0]
-
-    ssim_1 = ssim(generated[0], twoD_img[0], data_range=generated[0].max() - generated[0].min())
-    print("SSIM between first target and result:")
-    print(ssim_1)
-
-    ssim_2 = ssim(generated[1], twoD_img[1], data_range=generated[1].max() - generated[1].min())
-    print("SSIM between second target and result:")
-    print(ssim_2)
-
-    ssim_3 = ssim(generated[2], twoD_img[2], data_range=generated[2].max() - generated[2].min())
-    print("SSIM between third target and result:")
-    print(ssim_3)
-
-    ssim_4 = ssim(generated[3], twoD_img[3], data_range=generated[3].max() - generated[3].min())
-    print("SSIM between fourth target and result:")
-    print(ssim_4)
-
     # plot real source images
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + i)
         pyplot.axis('off')
         pyplot.imshow(X_realA_half[i])
+        try:
+          pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_source/%06d.png'% (step+1),X_realA_half[i])
+        except Exception:
+          pass
     # plot generated target image
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + n_samples + i)
         pyplot.axis('off')
-        
-        #generated = X_fakeB_half[:,:,:,0]
+        generated = X_fakeB_half[:,:,:,0]
+        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/fake/%06d.png'% (step+1),generated[i],cmap='gray')
         pyplot.imshow(generated[i],cmap="gray")
     # plot real target image
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + n_samples*2 + i)
         pyplot.axis('off')
-        #twoD_img = X_realB_half[:,:,:,0]
+        twoD_img = X_realB_half[:,:,:,0]
+        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_target/%06d.png'% (step+1),twoD_img[i],cmap='gray')
         pyplot.imshow(twoD_img[i],cmap="gray")
-    
-    # non compaiono sull'immagine
-    pyplot.text(80, 450, round(ssim_1,6))
-    pyplot.text(210, 450, round(ssim_2,6))
-    pyplot.text(340, 450, round(ssim_3,6))
-    pyplot.text(470, 450, round(ssim_4,6))
-
-
-    
-
-
     # save plot to file
     filename1 = savedir+'/global_plot_%06d.png' % (step+1)
     pyplot.savefig(filename1)
@@ -268,6 +240,24 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     d_model.save(filename3)
     print('>Saved: %s and %s' % (filename1, filename2))
     #return x_global
+
+    # SSIM
+
+    ssim_1 = ssim(generated[1], twoD_img[1], data_range=generated[1].max() - generated[1].min())
+    print("SSIM between first target and result:")
+    print(ssim_1)
+
+    ssim_2 = ssim(generated[2], twoD_img[2], data_range=generated[2].max() - generated[2].min())
+    print("SSIM between second target and result:")
+    print(ssim_2)
+
+    ssim_3 = ssim(generated[3], twoD_img[3], data_range=generated[3].max() - generated[3].min())
+    print("SSIM between third target and result:")
+    print(ssim_3)
+
+    ssim_4 = ssim(generated[4], twoD_img[4], data_range=generated[4].max() - generated[4].min())
+    print("SSIM between fourth target and result:")
+    print(ssim_3)
 
     
 
