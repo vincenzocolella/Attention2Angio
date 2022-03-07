@@ -212,7 +212,7 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
         pyplot.axis('off')
         pyplot.imshow(X_realA_half[i])
         try:
-          pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_source/%06d.png'% (step+1),X_realA_half[i])
+          pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_source/{}_{}.png'.format(step+1,i+1),X_realA_half[i])
         except Exception:
           pass
     # plot generated target image
@@ -220,14 +220,14 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
         pyplot.subplot(3, n_samples, 1 + n_samples + i)
         pyplot.axis('off')
         generated = X_fakeB_half[:,:,:,0]
-        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/fake/%06d.png'% (step+1),generated[i],cmap='gray')
+        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/fake/{}_{}.png'.format(step+1,i+1),generated[i],cmap='gray')
         pyplot.imshow(generated[i],cmap="gray")
     # plot real target image
     for i in range(n_samples):
         pyplot.subplot(3, n_samples, 1 + n_samples*2 + i)
         pyplot.axis('off')
         twoD_img = X_realB_half[:,:,:,0]
-        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_target/%06d.png'% (step+1),twoD_img[i],cmap='gray')
+        pyplot.imsave('/content/drive/Mydrive/Attention2Angio/Results/real_target/{}_{}.png'.format(step+1,i+1),twoD_img[i],cmap='gray')
         pyplot.imshow(twoD_img[i],cmap="gray")
     # save plot to file
     filename1 = savedir+'/global_plot_%06d.png' % (step+1)
