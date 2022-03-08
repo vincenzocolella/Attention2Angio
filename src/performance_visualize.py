@@ -6,6 +6,7 @@ import pandas as pd
 from skimage import data, img_as_float
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error
+from fid import compute_fid,compute_kid
 
 def visualize_save_weight(step,g_global_model,g_local_model, dataset, n_samples=3,savedir='AAGAN'):
     # select a sample of input images
@@ -258,6 +259,10 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     ssim_4 = ssim(generated[3], twoD_img[3], data_range=generated[3].max() - generated[3].min())
     print("SSIM between fourth target and result:")
     print(ssim_4)
+    
+    # FID E KID
+    print(compute_fid())
+    print(compute_kid())
 
     
 
