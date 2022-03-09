@@ -6,7 +6,7 @@ import pandas as pd
 from skimage import data, img_as_float
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error
-from fid import compute_fid,compute_kid
+from src.fid import compute_fid,compute_kid
 
 def visualize_save_weight(step,g_global_model,g_local_model, dataset, n_samples=3,savedir='AAGAN'):
     # select a sample of input images
@@ -44,12 +44,15 @@ def visualize_save_weight(step,g_global_model,g_local_model, dataset, n_samples=
         twoD_img = X_realB[:,:,:,0]
         pyplot.imshow(twoD_img[i],cmap="gray")
     # save plot to file
+    
     filename1 = savedir+'/local_plot_%06d.png' % (step+1)
     pyplot.savefig(filename1)
+    pyplot.savefig('/content/drive/MyDrive/Attention2Angio_files/local_plot_%06d.png' % (step+1))
     pyplot.close()
     # save the generator model
     filename2 = savedir+'/local_model_%06d.h5' % (step+1)
     g_local_model.save(filename2)
+    g_local_model.save('/content/drive/MyDrive/Attention2Angio_files/local_model_%06d.png' % (step+1))
     print('>Saved: %s and %s' % (filename1, filename2))
 
 def visualize_save_weight_global(step, g_model, dataset, n_samples=3,savedir='AA-GAN'):
@@ -122,7 +125,7 @@ def plot_history(d1_hist, d2_hist, d3_hist, d4_hist, d5_hist, d6_hist, d7_hist, 
     print('Saved %s' % (filename))
 def to_csv(d1_hist, d2_hist, d3_hist, d4_hist, d5_hist, d6_hist, d7_hist, d8_hist, fm1_hist, fm2_hist, fm3_hist, fm4_hist, g_global_hist,g_local_hist, 
                  g_global_percp_hist, g_local_percp_hist, g_global_recon_hist, g_local_recon_hist, gan_hist
-          ,savedir='AA-GAN'):
+          ,savedir='AAGAN'):
     if not os.path.exists(savedir):
         os.makedirs(savedir)
     d1 = np.array(d1_hist)
@@ -146,8 +149,10 @@ def to_csv(d1_hist, d2_hist, d3_hist, d4_hist, d5_hist, d6_hist, d7_hist, d8_his
     gan = np.array(gan_hist)
     df = pd.DataFrame(data=(d1,d2,d3,d4,d5,d6,d7,d8,fm1,fm2,fm3,fm4,g_global,g_local,g_g_per,g_l_per,g_g_rec,g_l_rec,gan)).T
     df.columns=["d1","d2","d3","d4","d5","d6","d7","d8","fm1","fm2","fm3","fm4","g_global","g_local","g_g_per","g_l_per","g_g_rec","g_l_rec","gan"]
-    filename = save_dir+"/attention-angio-loss.csv"
+    filename = savedir+"/attention-angio-loss.csv"
     df.to_csv(filename)
+    df.to_csv('/content/drive/MyDrive/Attention2Angio_files/attention-angio-loss.csv')
+    
 
 def summarize_performance(step,g_global_model,g_local_model, d_model, dataset, n_samples=3,savedir='VTGAN'):
     # select a sample of input images
@@ -186,12 +191,15 @@ def summarize_performance(step,g_global_model,g_local_model, d_model, dataset, n
     # save plot to file
     filename1 = savedir+'/local_plot_%06d.png' % (step+1)
     pyplot.savefig(filename1)
+    pyplot.savefig('/content/drive/MyDrive/Attention2Angio_files/local_plot_%06d.png' % (step+1))
     pyplot.close()
     # save the generator model
     filename2 = savedir+'/local_gmodel_%06d.h5' % (step+1)
     filename3 = savedir+'/local_dmodel_%06d.h5' % (step+1)
     g_local_model.save(filename2)
     d_model.save(filename3)
+    g_local_model.save('/content/drive/MyDrive/Attention2Angio_files/local_gmodel_%06d.h5' % (step+1))
+    d_model.save('/content/drive/MyDrive/Attention2Angio_files/local_dmodel_%06d.h5' % (step+1))
     print('>Saved: %s and %s' % (filename1, filename2))
 
 def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,savedir='VTGAN'):
@@ -233,12 +241,16 @@ def summarize_performance_global(step, g_model,d_model, dataset, n_samples=3,sav
     # save plot to file
     filename1 = savedir+'/global_plot_%06d.png' % (step+1)
     pyplot.savefig(filename1)
+    pyplot.savefig('/content/drive/MyDrive/Attention2Angio_files/global_plot_%06d.png' % (step+1))
     pyplot.close()
     # save the generator model
     filename2 = savedir+'/global_gmodel_%06d.h5' % (step+1)
     filename3 = savedir+'/global_dmodel_%06d.h5' % (step+1)
     g_model.save(filename2)
     d_model.save(filename3)
+    #saving to drive
+    g_model.save('/content/drive/MyDrive/Attention2Angio_files/global_gmodel_%06d.h5' % (step+1))
+    d_model.save('/content/drive/MyDrive/Attention2Angio_files/global_dmodel_%06d.h5' % (step+1))
     print('>Saved: %s and %s' % (filename1, filename2))
     #return x_global
 
